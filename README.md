@@ -1,30 +1,38 @@
-# ChatGLM-6B-Engineering
+# 类GPT自主学习平台-Server后端
 
-Re-edit from [ChatGLM-6B](https://github.com/THUDM/ChatGLM-6B)
+## 介绍（暂未编写完成）
 
-https://www.bilibili.com/video/BV1gX4y1B7PV
+目前正式后端正采用springboot框架编写
 
-## 介绍
+所以先编写了测试版后端，供前端学习调用
 
-ChatGLM-6B 是一个开源的、支持中英双语的对话语言模型，基于 [General Language Model (GLM)](https://github.com/THUDM/GLM) 架构，具有 62 亿参数。结合模型量化技术，用户可以在消费级的显卡上进行本地部署
+测试版后端使用Python快速实现了基于ChatGLM的接口，配有示例网页，能提供和GPT3.5相近的聊天能力，并在配置满足时额外支持：网络搜索、图片绘制、图片分析
 
-本项目基于 ChatGLM-6B 进行了后期调教，支持网上搜索及生成图片
 
-生成图片则需要本地部署 [Stable Diffusion](https://github.com/AUTOMATIC1111/stable-diffusion-webui) 并加载 API：
-
+## 部署
+安装依赖：
 ```powershell
-python webui.py --xformers --nowebui
+pip install -r requirements.txt
 ```
 
-运行程序需要先运行 api.py，
 
-再运行：
+## 运行
+运行接口：
+```powershell
+python api_ChatGLM_6B.py
+```
+
+运行示例网页：
 
 ```powershell
 streamlit run streamlit_new.py
 ```
 
-加载完成后在 http://localhost:8501/ 中查看
+
+图片绘制和图片分析能力需要部署 [Stable Diffusion](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
+
+因要求至少8G的显存+16G运行内存+40G软件大小，故在线开发环境暂不提供
+
 
 ## 功能
 
@@ -34,23 +42,23 @@ streamlit run streamlit_new.py
 
 ![Basic](examples/basic.png "基本对话")
 
-### 生成图片
+### 网络搜索
+
+![Web](examples/web.png "网络搜索")
+
+### 图片绘制
 
 需要 [Stable Diffusion](https://github.com/AUTOMATIC1111/stable-diffusion-webui) 支持
 
 ![Stable Diffusion](examples/sd.png "Stable Diffusion")
 
-### 网络搜索
+### 图片分析
 
-![Web](examples/web.png "网络搜索")
-
-### [CLIP](https://github.com/openai/CLIP) (Preview)
-
-需要 CLIP Interrogator 支持
+需要 [Stable Diffusion](https://github.com/AUTOMATIC1111/stable-diffusion-webui) 支持
 
 ![CLIP](examples/clip.png)
 
-## 运行时错误
+## 错误排除
 
 AssertionError: Torch not compiled with CUDA enabled
 
@@ -99,4 +107,4 @@ model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).ha
 
 ## 引用
 
-Forked from https://github.com/THUDM/ChatGLM-6B
+由ChatGLM-6B提供AI能力 https://github.com/THUDM/ChatGLM-6B
