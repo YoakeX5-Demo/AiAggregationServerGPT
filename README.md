@@ -1,37 +1,102 @@
-### 3 分钟了解如何进入开发
+# ChatGLM-6B-Engineering
 
-欢迎使用 Codeup，通过阅读以下内容，你可以快速熟悉 Codeup ，并立即开始今天的工作。
+Re-edit from [ChatGLM-6B](https://github.com/THUDM/ChatGLM-6B)
 
-### 提交**文件**
+https://www.bilibili.com/video/BV1gX4y1B7PV
 
-首先，你需要了解在 Codeup 中如何提交代码文件，跟着文档「[__提交第一行代码__](https://thoughts.teambition.com/sharespace/5d88b152037db60015203fd3/docs/5dc4f6786b81620014ef7574)」一起操作试试看吧。
+## 介绍
 
-### 开启扫描
+ChatGLM-6B 是一个开源的、支持中英双语的对话语言模型，基于 [General Language Model (GLM)](https://github.com/THUDM/GLM) 架构，具有 62 亿参数。结合模型量化技术，用户可以在消费级的显卡上进行本地部署
 
-开发过程中，为了更好的管理你的代码资产，Codeup 内置了「[__代码规约扫描__](https://thoughts.teambition.com/sharespace/5d88b152037db60015203fd3/docs/5dc4f68b6b81620014ef7588)」和「[__敏感信息检测__](https://thoughts.teambition.com/sharespace/5d88b152037db60015203fd3/docs/5dc4f6886b81620014ef7587)」服务，你可以在代码库设置-集成与服务中一键开启，开启后提交或合并请求的变更将自动触发扫描，并及时提供结果反馈。
+本项目基于 ChatGLM-6B 进行了后期调教，支持网上搜索及生成图片
 
-![](https://img.alicdn.com/tfs/TB1nRDatoz1gK0jSZLeXXb9kVXa-1122-380.png "")
+生成图片则需要本地部署 [Stable Diffusion](https://github.com/AUTOMATIC1111/stable-diffusion-webui) 并加载 API：
 
-![](https://img.alicdn.com/tfs/TB1PrPatXY7gK0jSZKzXXaikpXa-1122-709.png "")
+```powershell
+python webui.py --xformers --nowebui
+```
 
-### 代码评审
+运行程序需要先运行 api.py，
 
-功能开发完毕后，通常你需要发起「[__代码合并和评审__](https://thoughts.teambition.com/sharespace/5d88b152037db60015203fd3/docs/5dc4f6876b81620014ef7585)」，Codeup 支持多人协作的代码评审服务，你可以通过「[__保护分支__](https://thoughts.teambition.com/sharespace/5d88b152037db60015203fd3/docs/5dc4f68e6b81620014ef758c)」策略及「[__合并请求设置__](https://thoughts.teambition.com/sharespace/5d88b152037db60015203fd3/docs/5dc4f68f6b81620014ef758d)」对合并过程进行流程化管控，同时提供 WebIDE 在线代码评审及冲突解决能力，让你的评审过程更加流畅。
+再运行：
 
-![](https://img.alicdn.com/tfs/TB1XHrctkP2gK0jSZPxXXacQpXa-1432-887.png "")
+```powershell
+streamlit run streamlit_new.py
+```
 
-![](https://img.alicdn.com/tfs/TB1V3fctoY1gK0jSZFMXXaWcVXa-1432-600.png "")
+加载完成后在 http://localhost:8501/ 中查看
 
-### 编写文档
+## 功能
 
-项目推进过程中，你的经验和感悟可以直接记录到 Codeup 代码库的「[__文档__](https://thoughts.teambition.com/sharespace/5d88b152037db60015203fd3/docs/5e13107eedac6e001bd84889)」内，让智慧可视化。
+### 基本对话
 
-![](https://img.alicdn.com/tfs/TB1BN2ateT2gK0jSZFvXXXnFXXa-1432-700.png "")
+可支持上下文对话
 
-### 成员协作
+![Basic](examples/basic.png "基本对话")
 
-是时候邀请成员一起编写卓越的代码工程了，请点击右上角「成员」邀请你的小伙伴开始协作吧！
+### 生成图片
 
-### 更多
+需要 [Stable Diffusion](https://github.com/AUTOMATIC1111/stable-diffusion-webui) 支持
 
-Git 使用教学、高级功能指引等更多说明，参见[__Codeup帮助文档__](https://thoughts.teambition.com/sharespace/5d88b152037db60015203fd3/docs/5dc4f6756b81620014ef7571)。
+![Stable Diffusion](examples/sd.png "Stable Diffusion")
+
+### 网络搜索
+
+![Web](examples/web.png "网络搜索")
+
+### [CLIP](https://github.com/openai/CLIP) (Preview)
+
+需要 CLIP Interrogator 支持
+
+![CLIP](examples/clip.png)
+
+## 运行时错误
+
+AssertionError: Torch not compiled with CUDA enabled
+
+RuntimeError: CUDA error: no kernel image is available for execution on the device
+
+请运行
+
+```powershell
+nvidia-smi
+```
+
+及
+
+```powershell
+nvcc -V
+```
+
+查看结果 如都正常无 error ，请运行
+
+```python
+import torch
+print(torch.cuda.is_available())
+```
+
+**如返回为 True，**
+
+请将在api.py中第57行
+
+```python
+model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).quantize(4).half().cuda()
+```
+
+更改为
+
+```python
+model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).half().cuda()
+```
+
+**如返回为 False**
+
+请确认自己是否已安装gpu版本的torch
+
+可参考网络教程
+
+若设备无 nvidia 显卡，可参考 [Readme](https://github.com/THUDM/ChatGLM-6B/blob/main/README.md) 修改模型为 cpu 量化模型
+
+## 引用
+
+Forked from https://github.com/THUDM/ChatGLM-6B
