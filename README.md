@@ -15,7 +15,7 @@ pip install -r requirements.txt
 ## 运行
 运行接口：
 ```powershell
-python api_ChatGLM_6B.py
+python api.py
 ```
 
 运行示例网页：

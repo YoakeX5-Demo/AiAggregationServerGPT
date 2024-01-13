@@ -8,3 +8,4 @@ stable_diffusion.png
 clip_prelude.png
 test.py
 .idea/vcs.xml
+/venv/

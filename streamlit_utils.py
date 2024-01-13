@@ -342,9 +342,9 @@ def stable_diffusion(Pprompt, Nprompt, steps):
 
 
 def write_result(prompt, response):
-    st.markdown("### User: ")
+    st.markdown("### 问题: ")
     st.markdown(prompt)
-    st.markdown('### ChatGLM-6B: ')
+    st.markdown('### 回答: ')
     st.markdown(response)
 
 

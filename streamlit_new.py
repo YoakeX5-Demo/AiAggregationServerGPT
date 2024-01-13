@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="ChatGLM-6B",
     layout="wide"
 )
-st.title('ChatGLM-6B')
+st.title('GPT')
 st.sidebar.expander('')
 st.sidebar.subheader('Parameters')
 prompt = st.sidebar.text_area('Prompt', help="Text send  to ChatGLM-6B")
